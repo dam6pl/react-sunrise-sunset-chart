@@ -25,8 +25,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "tslint -c .tslint.json 'src/**/*.{ts,tsx}'",
-    "postinstall": "
-"
+    "postinstall": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
