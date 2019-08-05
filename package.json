@@ -10,6 +10,7 @@
     "@types/react": "16.8.24",
     "@types/react-datepicker": "^2.8.1",
     "@types/react-dom": "16.8.5",
+    "express": "^4.17.1",
     "moment": "^2.24.0",
     "react": "^16.8.6",
     "react-datepicker": "^2.8.0",
@@ -21,7 +22,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "tslint -c .tslint.json 'src/**/*.{ts,tsx}'"
+    "lint": "tslint -c .tslint.json 'src/**/*.{ts,tsx}'",
+    "postinstall": "react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
