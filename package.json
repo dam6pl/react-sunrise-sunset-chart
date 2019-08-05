@@ -12,18 +12,21 @@
     "@types/react-dom": "16.8.5",
     "express": "^4.17.1",
     "moment": "^2.24.0",
+    "path": "^0.12.7",
     "react": "^16.8.6",
     "react-datepicker": "^2.8.0",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server.js",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "tslint -c .tslint.json 'src/**/*.{ts,tsx}'",
-    "postinstall": "react-scripts build"
+    "postinstall": "
+"
   },
   "eslintConfig": {
     "extends": "react-app"
