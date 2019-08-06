@@ -1,15 +1,23 @@
 /** @jsx jsx */
 import React from 'react';
-import { jsx, css } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import SunBar from './SunBar';
 import edit from '../edit.svg'
 import styled from '@emotion/styled';
+import { ButtonStyled, ButtonRedStyled } from './App';
+import LocationInput from './LocationInput';
 
 interface IProps {
     id: number,
-    edit: number | false,
-    editCallback: (edit: number | false) => void,
-    saveCallback: (id: number, name?: string, lat?: number, lon?: number) => void,
+    editMode: number | false,
+    editCallback: (
+        action: 'ADD' | 'EDIT_START' | 'EDIT' | 'REMOVE',
+        id?: number,
+        location?: {
+            name?: string,
+            lat?: number,
+            lon?: number
+        }) => void,
     name?: string,
     lat?: number,
     lon?: number,
@@ -24,6 +32,52 @@ interface IState {
 
 const Fieldset = styled.fieldset`
     border: none;
+    flex: 1;
+    padding: 15px 0;
+
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    & > div {
+        display: inline-block;
+        width: 80%;
+    }
+`;
+
+const TitleStyled = styled.h3`
+    flex: 1; 
+    position: relative;
+    &:hover {
+        button {
+            display: block !important
+        }
+    }
+`;
+
+const ButtonEditStyled = styled.button`
+    width: 15px;
+    height: 15px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    position: absolute;
+    top: 3px;
+    right: 20px;
+    display: none;
+    cursor: pointer;
+`;
+
+const SvgStyled = styled.img`
+    width: 100%;
+    height: 100%;
+`;
+
+const ButtonsContainerStyled = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 export default class CityView extends React.Component<IProps, IState> {
@@ -33,54 +87,36 @@ export default class CityView extends React.Component<IProps, IState> {
         lon: this.props.lon
     }
 
-    handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
-        this.setState({ [e.target.name]: e.target.value });
+    componentWillReceiveProps(props: IProps) {
+        this.setState({
+            name: props.name,
+            lat: props.lat,
+            lon: props.lon
+        })
+    }
+
+    handleChange = (name: string, lat: number, lon: number) => {
+        this.setState({
+            name: name,
+            lat: lat,
+            lon: lon
+        });
     }
 
     render = () => {
         return (
             <div css={{ padding: '10px 0' }}>
-                {this.props.edit !== this.props.id ?
+                {this.props.editMode !== this.props.id ?
                     (
                         <div css={{ display: 'flex', alignItems: 'center' }}>
-                            <h3
-                                css={css`
-                                    flex: 1; 
-                                    position: relative;
-                                    &:hover {
-                                        button {
-                                            display: block !important
-                                        }
-                                    }
-                                `}
-                            >
+                            <TitleStyled>
                                 {this.props.name}
-                                {this.props.edit === false &&
-                                    <button
-                                        onClick={() => this.props.editCallback(this.props.id)}
-                                        css={{
-                                            width: 15,
-                                            height: 15,
-                                            padding: 0,
-                                            background: 'transparent',
-                                            border: 'none',
-                                            position: 'absolute',
-                                            top: 3,
-                                            right: 20,
-                                            display: 'none',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        <img alt="edit"
-                                            src={edit}
-                                            css={{
-                                                width: '100%',
-                                                height: '100%'
-                                            }}
-                                        />
-                                    </button>
+                                {this.props.editMode === false &&
+                                    <ButtonEditStyled onClick={() => this.props.editCallback('EDIT_START', this.props.id)}>
+                                        <SvgStyled alt="edit" src={edit} />
+                                    </ButtonEditStyled>
                                 }
-                            </h3>
+                            </TitleStyled>
                             <div css={{ flex: 1 }}>
                                 <SunBar
                                     lat={this.props.lat}
@@ -94,50 +130,17 @@ export default class CityView extends React.Component<IProps, IState> {
                             <div css={{ display: 'flex' }}>
                                 <Fieldset>
                                     <label htmlFor="name">Name: </label>
-                                    <input id="name" name="name"
-                                        value={this.state.name}
-                                        onChange={(e) => this.handleChange(e)}
-                                    />
-                                </Fieldset>
-                                <Fieldset>
-                                    <label htmlFor="lat">Lat: </label>
-                                    <input id="lat" name="lat"
-                                        value={this.state.lat}
-                                        onChange={(e) => this.handleChange(e)}
-                                    />
-                                </Fieldset>
-                                <Fieldset>
-                                    <label htmlFor="lon">Lon: </label>
-                                    <input id="lon" name="lon"
-                                        value={this.state.lon}
-                                        onChange={(e) => this.handleChange(e)}
-                                    />
+                                    <LocationInput value={this.state.name} saveCallback={this.handleChange} />
                                 </Fieldset>
                             </div>
-                            <button
-                                onClick={() => this.props.saveCallback(
-                                    this.props.id,
-                                    this.state.name,
-                                    this.state.lat,
-                                    this.state.lon
-                                )}
-                                css={css`
-                                    padding: 5px 15px;
-                                    background: green;
-                                    color: #fff;
-                                    border-color: #075407;
-                                    font-size: 16px;
-                                    font-weight: bold;
-                                    cursor: pointer;
-                                    transition: all 300ms;
-
-                                    &:hover {
-                                        color: green;
-                                        background: transparent;
-                                    }
-                                `}
-                            >
-                                Save</button>
+                            <ButtonsContainerStyled>
+                                <ButtonRedStyled onClick={() => this.props.editCallback('REMOVE', this.props.id)} >
+                                    Remove
+                                </ButtonRedStyled>
+                                <ButtonStyled onClick={() => this.props.editCallback('EDIT', this.props.id, this.state)}>
+                                    Save
+                                </ButtonStyled>
+                            </ButtonsContainerStyled>
                         </div>
                     )}
             </div>
