@@ -2,6 +2,9 @@
 
 A simple React.js app that display sunset/sunrise chart for followed localisations on specific date. App allow modify locations based on Google Places API.
 
+**Author:** [Damian Nowak](mailto:me@dnowak.dev)
+
 ![screenshot](Screenshot.png)
 
-**Author:** [Damian Nowak](mailto:me@dnowak.dev)
+## Demo
+https://sunrise-sunset-chart.herokuapp.com/
