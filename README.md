@@ -4,4 +4,4 @@ A simple React.js app that display sunset/sunrise chart for followed localisatio
 
 ![screenshot](Screenshot.png)
 
-**Auhtor:** [Damian Nowak](mailto:me@dnowak.dev)
+**Author:** [Damian Nowak](mailto:me@dnowak.dev)
