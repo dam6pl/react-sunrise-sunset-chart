@@ -15,34 +15,6 @@ interface IState {
     sunset: number
 }
 
-const SunBarContainer = styled.div`
-    background: #3c3c3c;
-    padding: 5px;
-    border-radius: 5px;
-    position: relative;
-    &:before {
-        content: '00:00';
-        position: absolute;
-        left: 0;
-        bottom: -12px;
-        font-size: 10px;
-    }
-    &:after {
-        content: '23:59';
-        position: absolute;
-        right: 0;
-        bottom: -12px;
-        font-size: 10px;
-    }
-`;
-
-const Span = styled.div`
-    background: #ffbc00;
-    width: 0;
-    display: inline-block;
-    height: 20px;
-`;
-
 export default class SunBar extends React.Component<IProps, IState> {
     state: Readonly<IState> = {
         sunrise: 0,
@@ -74,8 +46,7 @@ export default class SunBar extends React.Component<IProps, IState> {
         })
     }
 
-    render = () => {
-        console.log(this.state)
+    render() {
         return (
             <div>
                 {this.state.sunrise < this.state.sunset ?
@@ -104,3 +75,31 @@ export default class SunBar extends React.Component<IProps, IState> {
         )
     }
 }
+
+const SunBarContainer = styled.div`
+    background: #3c3c3c;
+    padding: 5px;
+    border-radius: 5px;
+    position: relative;
+    &:before {
+        content: '00:00';
+        position: absolute;
+        left: 0;
+        bottom: -12px;
+        font-size: 10px;
+    }
+    &:after {
+        content: '23:59';
+        position: absolute;
+        right: 0;
+        bottom: -12px;
+        font-size: 10px;
+    }
+`;
+
+const Span = styled.div`
+    background: #ffbc00;
+    width: 0;
+    display: inline-block;
+    height: 20px;
+`;

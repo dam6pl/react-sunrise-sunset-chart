@@ -4,30 +4,68 @@ import { jsx } from '@emotion/core';
 import SunBar from './SunBar';
 import edit from '../edit.svg'
 import styled from '@emotion/styled';
-import { ButtonStyled, ButtonRedStyled } from './App';
+import { ButtonStyled, ButtonRedStyled } from '../App';
 import LocationInput from './LocationInput';
+import Store from '../Store';
+import { observer } from 'mobx-react';
 
 interface IProps {
     id: number,
-    editMode: number | false,
-    editCallback: (
-        action: 'ADD' | 'EDIT_START' | 'EDIT' | 'REMOVE',
-        id?: number,
-        location?: {
-            name?: string,
-            lat?: number,
-            lon?: number
-        }) => void,
-    name?: string,
-    lat?: number,
-    lon?: number,
-    date: Date
+    location: { name?: string, lat?: number, lon?: number },
+    store: Store
 }
 
-interface IState {
-    name?: string,
-    lat?: number,
-    lon?: number
+@observer
+export default class CityView extends React.Component<IProps> {
+    handleLocationChange = (name: string, lat: number, lon: number) => {
+        this.props.store.saveLocation(this.props.id, { name, lat, lon });
+    }
+
+    render() {
+        const { id, location, store } = this.props;
+
+        return (
+            <div css={{ padding: '10px 0' }}>
+                {store.edit !== this.props.id ?
+                    (
+                        <div css={{ display: 'flex', alignItems: 'center' }}>
+                            <TitleStyled>
+                                {location.name}
+                                {store.edit === false &&
+                                    <ButtonEditStyled onClick={() => store.edit = id}>
+                                        <SvgStyled alt="edit" src={edit} />
+                                    </ButtonEditStyled>
+                                }
+                            </TitleStyled>
+                            <div css={{ flex: 1 }}>
+                                <SunBar
+                                    lat={location.lat}
+                                    lon={location.lon}
+                                    date={store.date}
+                                />
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <div css={{ display: 'flex' }}>
+                                <Fieldset>
+                                    <label htmlFor="name">Name: </label>
+                                    <LocationInput value={location.name} saveCallback={this.handleLocationChange} />
+                                </Fieldset>
+                            </div>
+                            <ButtonsContainerStyled>
+                                <ButtonRedStyled onClick={() => store.removeLocation(this.props.id)} >
+                                    Remove
+                                </ButtonRedStyled>
+                                <ButtonStyled onClick={() => store.edit = false}>
+                                    Save
+                                </ButtonStyled>
+                            </ButtonsContainerStyled>
+                        </div>
+                    )}
+            </div>
+        )
+    }
 }
 
 const Fieldset = styled.fieldset`
@@ -79,71 +117,3 @@ const ButtonsContainerStyled = styled.div`
     justify-content: space-between;
     align-items: center;
 `;
-
-export default class CityView extends React.Component<IProps, IState> {
-    state: Readonly<IState> = {
-        name: this.props.name,
-        lat: this.props.lat,
-        lon: this.props.lon
-    }
-
-    componentWillReceiveProps(props: IProps) {
-        this.setState({
-            name: props.name,
-            lat: props.lat,
-            lon: props.lon
-        })
-    }
-
-    handleChange = (name: string, lat: number, lon: number) => {
-        this.setState({
-            name: name,
-            lat: lat,
-            lon: lon
-        });
-    }
-
-    render = () => {
-        return (
-            <div css={{ padding: '10px 0' }}>
-                {this.props.editMode !== this.props.id ?
-                    (
-                        <div css={{ display: 'flex', alignItems: 'center' }}>
-                            <TitleStyled>
-                                {this.props.name}
-                                {this.props.editMode === false &&
-                                    <ButtonEditStyled onClick={() => this.props.editCallback('EDIT_START', this.props.id)}>
-                                        <SvgStyled alt="edit" src={edit} />
-                                    </ButtonEditStyled>
-                                }
-                            </TitleStyled>
-                            <div css={{ flex: 1 }}>
-                                <SunBar
-                                    lat={this.props.lat}
-                                    lon={this.props.lon}
-                                    date={this.props.date}
-                                />
-                            </div>
-                        </div>
-                    ) : (
-                        <div>
-                            <div css={{ display: 'flex' }}>
-                                <Fieldset>
-                                    <label htmlFor="name">Name: </label>
-                                    <LocationInput value={this.state.name} saveCallback={this.handleChange} />
-                                </Fieldset>
-                            </div>
-                            <ButtonsContainerStyled>
-                                <ButtonRedStyled onClick={() => this.props.editCallback('REMOVE', this.props.id)} >
-                                    Remove
-                                </ButtonRedStyled>
-                                <ButtonStyled onClick={() => this.props.editCallback('EDIT', this.props.id, this.state)}>
-                                    Save
-                                </ButtonStyled>
-                            </ButtonsContainerStyled>
-                        </div>
-                    )}
-            </div>
-        )
-    }
-}

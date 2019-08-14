@@ -1,10 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx } from '@emotion/core';
-import PlacesAutocomplete, {
-    geocodeByAddress,
-    getLatLng,
-} from 'react-places-autocomplete';
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import styled from '@emotion/styled';
 
 interface IProps {
@@ -15,30 +12,6 @@ interface IProps {
 interface IState {
     value: string
 }
-
-const InputContainer = styled.div`
-    position: relative;
-
-    .location-search-input {
-        width: 100%;
-        font-size: 16px;
-        box-sizing: border-box;
-    }
-
-    .autocomplete-dropdown-container {
-        box-sizing: border-box;
-        position: absolute;
-        background: #fff;
-        border: 1px solid #c3c3c3;
-        border-top: 0;
-        width: 100%;
-        z-index: 100;
-
-        & > div {
-            padding: 5px;
-        }
-    }
-`;
 
 export default class LocationInput extends React.Component<IProps, IState> {
     state: Readonly<IState> = {
@@ -88,3 +61,28 @@ export default class LocationInput extends React.Component<IProps, IState> {
         );
     }
 }
+
+const InputContainer = styled.div`
+    position: relative;
+
+    .location-search-input {
+        width: 100%;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    .autocomplete-dropdown-container {
+        box-sizing: border-box;
+        position: absolute;
+        background: #fff;
+        border: 1px solid #c3c3c3;
+        border-top: 0;
+        width: 100%;
+        z-index: 100;
+
+        & > div {
+            padding: 5px;
+            cursor: pointer;
+        }
+    }
+`;
